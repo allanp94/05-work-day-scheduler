@@ -1,4 +1,6 @@
-var events = [];
+var timeEvents = JSON.parse(localStorage.getItem("timeEvents")) || [];
+console.log(timeEvents);
+$("#currentDay").text(moment().format("LL"));
 
 //create each hour segment for the work day
 function createHourSegments(startTime, endTime) {
@@ -7,7 +9,6 @@ function createHourSegments(startTime, endTime) {
 
     //create a div element with class row
     var row = $("<div>").addClass("row");
-    row.attr("time", startTime);
 
     var hourDiv = $("<div>").addClass("col-2 hour");
     //create the element to display the hour
@@ -18,12 +19,15 @@ function createHourSegments(startTime, endTime) {
     //create the discription area for the event
     var descriptionDiv = $("<div>").addClass("description col-8");
     var textArea = $("<textarea>").addClass("textarea");
+    textArea.attr("time", startTime);
+
+    textArea.val(checkLocalStorage(startTime.toString()));
 
     descriptionDiv.append(textArea);
 
     //create the button that saves the event
-    var saveButton = $("<button>").addClass("saveBtn col-2 btn btn-default");
-    //   glyphicon glyphicon - floppy - save
+    var saveButton = $("<button>").addClass("saveBtn col-2");
+    saveButton.attr("time", startTime);
 
     var saveIcon = $("<i>").addClass("fas fa-save");
 
@@ -33,6 +37,15 @@ function createHourSegments(startTime, endTime) {
     checkHourSegment(row);
     $(".container").append(row);
     startTime++;
+  }
+}
+
+function checkLocalStorage(attr) {
+  for (var i = 0; i < timeEvents.length; i++) {
+    if (timeEvents[i].time === attr) {
+      console.log(timeEvents[i].text);
+      return timeEvents[i].text;
+    }
   }
 }
 
@@ -79,5 +92,19 @@ setInterval(function () {
 
 //when the save button is pressed the input
 //text by the user is saved in the textarea and in local storage
+
+// $(".container").on("click", "textarea", function () {
+//   var text = $(this).text().trim();
+// });
+
+$(".container").on("click", "button", function () {
+  var attr = $(this).attr("time");
+  var textarea = $(".container .textarea[time=" + attr + " ]");
+  var textCont = textarea.val().trim();
+
+  timeEvents.push({ time: attr, text: textCont });
+
+  localStorage.setItem("timeEvents", JSON.stringify(timeEvents));
+});
 
 createHourSegments(09, 24);
