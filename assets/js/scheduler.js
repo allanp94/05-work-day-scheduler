@@ -92,19 +92,30 @@ setInterval(function () {
 
 //when the save button is pressed the input
 //text by the user is saved in the textarea and in local storage
-
-// $(".container").on("click", "textarea", function () {
-//   var text = $(this).text().trim();
-// });
-
 $(".container").on("click", "button", function () {
   var attr = $(this).attr("time");
   var textarea = $(".container .textarea[time=" + attr + " ]");
   var textCont = textarea.val().trim();
+  var exists = false;
+  var index;
 
-  timeEvents.push({ time: attr, text: textCont });
+  for (var i = 0; i < timeEvents.length; i++) {
+    if (timeEvents[i].time === attr) {
+      exists = true;
+      index = i;
+      break;
+    }
+  }
+
+  if (exists) {
+    timeEvents[index].text = textCont;
+    exists = false;
+  } else {
+    timeEvents.push({ time: attr, text: textCont });
+    console.log("it got pushed to the localstorage");
+  }
 
   localStorage.setItem("timeEvents", JSON.stringify(timeEvents));
 });
 
-createHourSegments(09, 24);
+createHourSegments(09, 17);
