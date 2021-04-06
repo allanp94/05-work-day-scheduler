@@ -1,6 +1,6 @@
 var timeEvents = JSON.parse(localStorage.getItem("timeEvents")) || [];
 console.log(timeEvents);
-$("#currentDay").text(moment().format("LL"));
+$("#currentDay").text(moment().format("LLLL"));
 
 //create each hour segment for the work day
 function createHourSegments(startTime, endTime) {
@@ -43,7 +43,6 @@ function createHourSegments(startTime, endTime) {
 function checkLocalStorage(attr) {
   for (var i = 0; i < timeEvents.length; i++) {
     if (timeEvents[i].time === attr) {
-      console.log(timeEvents[i].text);
       return timeEvents[i].text;
     }
   }
